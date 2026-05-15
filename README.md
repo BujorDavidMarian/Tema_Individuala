@@ -1,45 +1,72 @@
-# MPI Parallel Sorting Algorithms
+# Parallel Sorting Algorithms (MPI & Threads)
 
-This project implements two parallel sorting algorithms using **MPI (Message Passing Interface)** and **C++ STL**:
-1. **Parallel Merge Sort**: Uses a tree-based reduction pattern for merging.
-2. **Parallel Quick Sort**: Uses a distributed pivot partitioning approach.
+This project implements various parallel sorting algorithms using two different paradigms:
+1. **MPI (Message Passing Interface)** for distributed memory parallelism.
+2. **C++ Threads (`std::thread`)** for shared memory parallelism.
+
+Both implementations include **Parallel Merge Sort** and **Parallel Quick Sort**.
 
 ## Features
-- **Data Distribution**: Data is distributed using `MPI_Scatterv` and collected using `MPI_Gatherv`.
-- **Timing**: Measures execution time using `MPI_Wtime()`.
-- **Verification**: Automatically verifies if the resulting array is correctly sorted.
-- **Input Handling**: Reads data from a text file (first line is the count, followed by space-separated integers).
+- **MPI Implementation**:
+  - Uses `MPI_Scatterv` and `MPI_Gatherv` for data distribution.
+  - Tree-based merge for Merge Sort.
+  - Recursive communicator splitting for Quick Sort.
+- **Threads Implementation**:
+  - Uses `std::thread` and `std::inplace_merge` for Merge Sort.
+  - Uses recursive task spawning with depth limiting for Quick Sort.
+- **Verification**: Both programs automatically verify the sorted result.
+- **Timing**: Measures execution time for performance analysis.
 
 ## Project Structure
-- `MPI1/MPI1/MPI1.cpp`: The main source code containing both algorithm implementations.
-- `generate_input.py`: A Python script to generate random test data (`input.txt`).
-- `MPI1/MPI1.sln`: Visual Studio solution for the project.
+- `MPI1/`: Contains the MPI implementation.
+  - `MPI1/MPI1.cpp`: Main source for MPI sorting.
+  - `MPI1.sln`: Visual Studio solution.
+- `Threads/`: Contains the multi-threaded implementation.
+  - `Threads.cpp`: Main source for thread-based sorting.
+- `input.txt`: Sample input data (10,000 elements).
 
 ## Compilation
-To compile the project using MSBuild (Visual Studio 2022):
+
+### Using MSBuild (Visual Studio)
+To compile both projects from the root directory:
 ```powershell
+# Compile MPI Project
 & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" MPI1\MPI1.sln /p:Configuration=Debug /p:Platform=x64
+
+# Compile Threads Project
+& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" Threads\Threads.vcxproj /p:Configuration=Debug /p:Platform=x64
 ```
 
 ## Running the Algorithms
-The program requires two arguments: the algorithm name (`merge` or `quick`) and the path to the input file.
 
-### Parallel Merge Sort
-Run with 4 processes:
+### MPI Implementation
+Requires `mpiexec` (Microsoft MPI or similar).
 ```powershell
+# Parallel Merge Sort (4 processes)
 mpiexec -n 4 "MPI1\x64\Debug\MPI1.exe" merge "input.txt"
+
+# Parallel Quick Sort (4 processes)
+mpiexec -n 4 "MPI1\x64\Debug\MPI1.exe" quick "input.txt"
 ```
 
-### Parallel Quick Sort
-Run with 4 processes:
+### Threads Implementation
+Directly execute the binary.
 ```powershell
-mpiexec -n 4 "MPI1\x64\Debug\MPI1.exe" quick "input.txt"
+# Parallel Merge Sort
+"Threads\x64\Debug\Threads.exe" merge "input.txt"
+
+# Parallel Quick Sort
+"Threads\x64\Debug\Threads.exe" quick "input.txt"
 ```
 
 ## Input File Format
 The input file should be formatted as follows:
 ```text
-10
-5 2 9 1 5 6 3 8 7 4
+<count>
+<element1> <element2> ... <elementN>
 ```
-Where `10` is the number of elements.
+Example:
+```text
+5
+10 5 2 8 3
+```
