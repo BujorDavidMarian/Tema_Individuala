@@ -11,14 +11,14 @@ Both MPI and Threads implementations include **Parallel Merge Sort** and **Paral
 Below are the benchmark results comparing the average execution time of the three implementations (MPI with 4 processes, C++ Threads, and C++17 STL) for a dataset of 10,000 elements.
 
 ### Merge Sort Comparison
-![Merge Sort Comparison](Merge_Sort_Comparison.png)
+<img width="3000" height="1800" alt="Merge_Sort_Comparison" src="https://github.com/user-attachments/assets/8cd09e01-4dbf-470e-be4e-fa0061c8037a" />
 
 ### Quick Sort Comparison
-![Quick Sort Comparison](Quick_Sort_Comparison.png)
+<img width="3000" height="1800" alt="Quick_Sort_Comparison" src="https://github.com/user-attachments/assets/050595b2-27fe-4047-ab53-df26f5aafc64" />
+
 
 ## Features
-...
-
+- **MPI Implementation**:
   - Uses `MPI_Scatterv` and `MPI_Gatherv` for data distribution.
   - Tree-based merge for Merge Sort.
   - Recursive communicator splitting for Quick Sort.
